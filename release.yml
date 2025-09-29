@@ -1,0 +1,38 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v0.1.0'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22.6'
+
+      - name: Run tests before release
+        run: go test ./... -v
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Trigger pkg.go.dev refresh
+        run: |
+          PACKAGE="github.com/${{ github.repository }}"
+          VERSION="${GITHUB_REF_NAME}"
+          echo "Refreshing pkg.go.dev for $PACKAGE@$VERSION"
+          curl -X POST "https://proxy.golang.org/${PACKAGE}/@v/${VERSION}.info"
+
+          echo "Refreshing pkg.go.dev for $PACKAGE@latest"
+          curl -X POST "https://proxy.golang.org/${PACKAGE}/@v/list"
