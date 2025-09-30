@@ -11,6 +11,10 @@
 `geosegment` is a Go library for geographical computations such as segments, distances, nearest point and midpoints.
 
 ## Features
+- ✅ Point
+- ✅ LineString
+- ✅ SnapPoint
+- ✅ NearestPoint
 - ✅ Distance
 - ✅ Length
 - ✅ Slice Line
