@@ -143,3 +143,17 @@ func LengthMeters(ls orb.LineString) float64 {
 
 	return total
 }
+
+// PointEquals checks if two points are equal within a certain tolerance.
+func PointEquals(a, b orb.Point) bool {
+	const epsilon = 1e-9 // tolerance for floating-point equality
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if (a[i]-b[i]) > epsilon || (b[i]-a[i]) > epsilon {
+			return false
+		}
+	}
+	return true
+}

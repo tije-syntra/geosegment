@@ -64,23 +64,30 @@ func Length(ls orb.LineString) float64 {
 //   - Useful for extracting a route segment from a larger path based on
 //     GPS coordinates.
 func SliceLine(a, b orb.Point, ls orb.LineString) orb.LineString {
-	startPt, startIdx := utils.ClosestPointOnLine(ls, a)
-	endPt, endIdx := utils.ClosestPointOnLine(ls, b)
+	startPt, _ := utils.ClosestPointOnLine(ls, a)
+	endPt, _ := utils.ClosestPointOnLine(ls, b)
 
-	if startIdx > endIdx {
-		// multiple assignment
-		startPt, endPt = endPt, startPt
-		startIdx, endIdx = endIdx, startIdx
-	}
-
+	startFound := false
 	sliced := orb.LineString{}
-	sliced = append(sliced, startPt)
 
-	for i := startIdx + 1; i < endIdx; i++ {
-		sliced = append(sliced, ls[i])
+	for _, p := range ls {
+		// Add point if startPt found
+		if !startFound && utils.PointEquals(p, startPt) {
+			startFound = true
+		}
+		if startFound {
+			sliced = append(sliced, p)
+		}
+		// Stop when endPt found
+		if utils.PointEquals(p, endPt) {
+			break
+		}
 	}
 
-	sliced = append(sliced, endPt)
+	// Make sure start and end points are included
+	if len(sliced) == 0 || !utils.PointEquals(sliced[len(sliced)-1], endPt) {
+		sliced = append(sliced, endPt)
+	}
 
 	return sliced
 }
