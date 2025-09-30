@@ -4,13 +4,19 @@
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/tije-syntra/geosegment)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/tije-syntra/geosegment)
 ![GitHub License](https://img.shields.io/github/license/tije-syntra/geosegment?cacheSeconds=10)
+![Point Format](https://img.shields.io/badge/Point-orb.Point-blue)
+![Line Format](https://img.shields.io/badge/Line-orb.Line-blue)
+
 
 `geosegment` is a Go library for geographical computations such as segments, distances, nearest point and midpoints.
 
 ## Features
-- ✅ Haversine distance calculation
-- ✅ Segment length & midpoint
-- ✅ Ready for semantic versioning
+- ✅ Distance
+- ✅ Length
+- ✅ Slice Line
+- ✅ Nearest Point on Line
+- ✅ Snap To Road by Segment
+
 
 ## Installation
 
