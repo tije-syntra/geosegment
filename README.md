@@ -4,8 +4,8 @@
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/tije-syntra/geosegment)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/tije-syntra/geosegment)
 ![GitHub License](https://img.shields.io/github/license/tije-syntra/geosegment?cacheSeconds=10)
-![Point Format](https://img.shields.io/badge/Point-orb.Point-blue)
-![Line Format](https://img.shields.io/badge/Line-orb.Line-blue)
+[![Point Format](https://img.shields.io/badge/point-orb.Point-blue)](https://pkg.go.dev/github.com/paulmach/orb#Point)
+[![LineString Format](https://img.shields.io/badge/line_string-orb.LineString-blue)](https://pkg.go.dev/github.com/paulmach/orb#LineString)
 
 
 `geosegment` is a Go library for geographical computations such as segments, distances, nearest point and midpoints.
