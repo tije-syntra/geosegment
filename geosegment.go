@@ -22,6 +22,10 @@ type SnapPoint struct {
 	Direction float64   `json:"direction"`
 }
 
+func Version() string {
+	return "v1.1.0"
+}
+
 // Distance returns the distance between two points in meters.
 //
 // Parameters:
