@@ -157,3 +157,93 @@ func PointEquals(a, b orb.Point) bool {
 	}
 	return true
 }
+
+func ClosestPoint(p, a, b orb.Point) orb.Point {
+	ax, ay := a.X(), a.Y()
+	bx, by := b.X(), b.Y()
+	px, py := p.X(), p.Y()
+
+	dx, dy := bx-ax, by-ay
+	d := dx*dx + dy*dy
+
+	if d == 0 {
+		return a // a == b
+	}
+
+	t := ((px-ax)*dx + (py-ay)*dy) / d
+	if t < 0 {
+		return a
+	} else if t > 1 {
+		return b
+	}
+	return orb.Point{ax + t*dx, ay + t*dy}
+}
+
+func degToRad(d float64) float64 {
+	return d * math.Pi / 180
+}
+
+func HaversineDistance(a, b orb.Point) float64 {
+	const R = 6371000.0 // Meter
+
+	lat1 := degToRad(a[1])
+	lon1 := degToRad(a[0])
+	lat2 := degToRad(b[1])
+	lon2 := degToRad(b[0])
+
+	dlat := lat2 - lat1
+	dlon := lon2 - lon1
+
+	h := math.Sin(dlat/2)*math.Sin(dlat/2) +
+		math.Cos(lat1)*math.Cos(lat2)*math.Sin(dlon/2)*math.Sin(dlon/2)
+
+	return 2 * R * math.Asin(math.Sqrt(h))
+}
+
+func NearestPointOnLine(point orb.Point, line orb.LineString) (orb.Point, int) {
+	minDist := math.MaxFloat64
+	closestPoint := line[0]
+	closestIndex := 0
+
+	for i := 0; i < len(line)-1; i++ {
+		a := line[i]
+		b := line[i+1]
+
+		proj := ClosestPoint(point, a, b)
+		dist := HaversineDistance(point, proj)
+
+		if dist < minDist {
+			minDist = dist
+			closestPoint = proj
+			closestIndex = i
+		}
+	}
+
+	return closestPoint, closestIndex
+}
+
+func SliceLineStringByNearestLocations(a, b orb.Point, line orb.LineString) orb.LineString {
+	startPt, startIdx := NearestPointOnLine(a, line)
+	endPt, endIdx := NearestPointOnLine(b, line)
+
+	// Pastikan index dalam urutan benar
+	if startIdx > endIdx {
+		startPt, endPt = endPt, startPt
+		startIdx, endIdx = endIdx, startIdx
+	}
+
+	sliced := orb.LineString{}
+
+	// Tambahkan titik start
+	sliced = append(sliced, startPt)
+
+	// Tambahkan semua titik di antara segmen
+	for i := startIdx + 1; i < endIdx; i++ {
+		sliced = append(sliced, line[i])
+	}
+
+	// Tambahkan titik end
+	sliced = append(sliced, endPt)
+
+	return sliced
+}
